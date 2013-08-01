@@ -1,0 +1,17 @@
+{
+  "name": "agent-next",
+  "version": "0.0.0",
+  "author": "Eldar Gabdullin <eldargab@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/eldargab/agent-next"
+  },
+  "dependencies": {
+    "qs": "0.6.x",
+    "mixobjects": "~1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  }
+}
