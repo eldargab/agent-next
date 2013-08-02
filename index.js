@@ -1,7 +1,7 @@
 var Agent = require('./lib/agent')
 var Request = require('./lib/request')
 var Response = require('./lib/response')
-var util = require('./util')
+var util = require('./lib/util')
 
 exports = module.exports = new Agent()
   .onRequest(util.serialize())
@@ -10,6 +10,12 @@ exports = module.exports = new Agent()
 exports.basic = function() {
   return new Agent
 }
+
+exports.Url = util.Url
+
+exports.bodyParser = util.bodyParser
+
+exports.serialize = util.serialize
 
 exports.Agent = Agent
 
