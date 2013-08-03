@@ -6,6 +6,8 @@ var m = require('./lib/middlewares')
 
 exports = module.exports = new Agent()
   .onRequest(m.serialize())
+  .onRequest(m.acceptEncoding('gzip,deflate'))
+  .onResponse(m.unzip())
   .onResponse(m.bodyParser())
 
 exports.basic = function() {
