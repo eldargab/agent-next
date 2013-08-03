@@ -1,6 +1,6 @@
 {
   "name": "agent-next",
-  "version": "0.0.0",
+  "version": "0.0.1alpha1",
   "author": "Eldar Gabdullin <eldargab@gmail.com>",
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
     "mocha": "*",
     "should": "*",
     "express": "~3.3.4"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
   }
 }
