@@ -1,5 +1,7 @@
 var express = require('express')
 var should = require('should')
+var fs = require('fs')
+var Simple = require('../lib/simple-stream')
 
 var app = express()
 
@@ -14,7 +16,7 @@ app.post('/echo', function(req, res) {
 })
 
 var server = app.listen(0)
-var u = 'http://localhost:' + server.address().port
+var u = 'http://127.0.0.1:' + server.address().port
 
 describe('Basic agent', function() {
   var agent = require('../index').basic()
@@ -113,6 +115,23 @@ describe('Basic agent', function() {
         if (err) return done(err)
         res.headers.should.have.property('content-length').be.equal('3')
         done()
+      })
+    })
+  })
+
+  describe('When req.body is a stream', function() {
+    it('Should transfer it', function(done) {
+      var stream = new Simple(fs.createReadStream(__filename))
+      agent
+      .post(u + '/echo')
+      .send(stream)
+      .end(function(err, res) {
+        if (err) return done(err)
+        res.body.consume('utf8', function(err, text) {
+          if (err) return done(err)
+          text.should.match(/Should transfer it/)
+          done()
+        })
       })
     })
   })
