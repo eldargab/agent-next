@@ -19,10 +19,9 @@ app.post('/echo', function(req, res) {
   req.pipe(res)
 })
 
-var server = app.listen(0)
-var u = 'http://127.0.0.1:' + server.address().port
 
 describe('Basic agent', function() {
+  var u = require('./util/start')(app)
   var agent = require('../index').basic()
 
   describe('response', function() {

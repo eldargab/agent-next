@@ -18,6 +18,8 @@ exports.bodyParser = m.bodyParser
 
 exports.serialize = m.serialize
 
+exports.unzip = m.unzip
+
 exports.Agent = Agent
 
 exports.Request = Request
