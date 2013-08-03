@@ -1,21 +1,22 @@
 var Agent = require('./lib/agent')
 var Request = require('./lib/request')
 var Response = require('./lib/response')
-var util = require('./lib/util')
+var Url = require('./lib/url')
+var m = require('./lib/middlewares')
 
 exports = module.exports = new Agent()
-  .onRequest(util.serialize())
-  .onResponse(util.bodyParser())
+  .onRequest(m.serialize())
+  .onResponse(m.bodyParser())
 
 exports.basic = function() {
   return new Agent
 }
 
-exports.Url = util.Url
+exports.Url = Url
 
-exports.bodyParser = util.bodyParser
+exports.bodyParser = m.bodyParser
 
-exports.serialize = util.serialize
+exports.serialize = m.serialize
 
 exports.Agent = Agent
 
