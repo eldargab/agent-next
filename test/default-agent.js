@@ -1,5 +1,5 @@
 var express = require('express')
-var agent = require('../index')
+var agent = require('../index')()
 var start = require('./util/start')
 
 var app = express()
@@ -25,6 +25,7 @@ describe('Default agent', function() {
     .send({foo: 'bar'})
     .end(function(err, res) {
       if (err) return done(err)
+      res.headers.should.have.property('content-encoding').equal('gzip')
       res.text.should.equal('{"foo":"bar"}')
       res.body.should.eql({foo: 'bar'})
       done()
