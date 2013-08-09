@@ -1,7 +1,7 @@
 var express = require('express')
 var should = require('should')
 var fs = require('fs')
-var Simple = require('../lib/simple-stream')
+var Simple = require('stream-simple')
 
 var app = express()
 
