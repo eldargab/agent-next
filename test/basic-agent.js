@@ -54,6 +54,19 @@ describe('Basic agent', function() {
         })
       })
     })
+
+    it('Should have `.charset` if specified', function(done) {
+      agent
+      .post(u + '/echo')
+      .type('text/plain; charset="UTF-8"')
+      .send('hello')
+      .end(function(err, res) {
+        if (err) return done(err)
+        res.body.abort()
+        res.should.have.property('charset').equal('UTF-8')
+        done()
+      })
+    })
   })
 
   describe('request', function() {
