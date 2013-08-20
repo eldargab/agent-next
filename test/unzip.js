@@ -1,4 +1,5 @@
 var express = require('express')
+var consume = require('simple-binary-consume')
 var start = require('./util/start')
 var Agent = require('../index')
 
@@ -24,7 +25,7 @@ describe('unzip middleware', function() {
     .end(function(err, res) {
       if (err) return done(err)
       res.headers.should.have.property('content-encoding').equal('gzip')
-      res.body.consume('utf8', function(err, text) {
+      consume(res.body, 'utf8', function(err, text) {
         if (err) return done(err)
         text.should.equal('hello')
         done()
@@ -39,7 +40,7 @@ describe('unzip middleware', function() {
     .end(function(err, res) {
       if (err) return done(err)
       res.headers.should.have.property('content-encoding').equal('deflate')
-      res.body.consume('utf8', function(err, text) {
+      consume(res.body, 'utf8', function(err, text) {
         if (err) return done(err)
         text.should.equal('hello')
         done()

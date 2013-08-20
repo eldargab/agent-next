@@ -2,6 +2,7 @@ var express = require('express')
 var should = require('should')
 var fs = require('fs')
 var Simple = require('stream-simple')
+var consume = require('simple-binary-consume')
 
 var app = express()
 
@@ -46,7 +47,7 @@ describe('Basic agent', function() {
     it('Should have `.body` simple stream', function(done) {
       agent.get(u + '/hello').end(function(err, res) {
         if (err) return done(err)
-        res.body.consume('utf8', function(err, text) {
+        consume(res.body, 'utf8', function(err, text) {
           if (err) return done(err)
           text.should.equal('hello')
           done()
@@ -73,7 +74,7 @@ describe('Basic agent', function() {
         .send('Привет')
         .end(function(err, res) {
           if (err) return done(err)
-          res.body.consume('utf8', function(err, text) {
+          consume(res.body, 'utf8', function(err, text) {
             if (err) return done(err)
             text.should.equal('Привет')
             done()
@@ -101,7 +102,7 @@ describe('Basic agent', function() {
         .send(new Buffer([0, 1, 2]))
         .end(function(err, res) {
           if (err) return done(err)
-          res.body.consume(function(err, buf) {
+          consume(res.body, function(err, buf) {
             if (err) return done(err)
             buf.length.should.equal(3)
             buf[0].should.equal(0)
@@ -133,7 +134,7 @@ describe('Basic agent', function() {
         .send(stream)
         .end(function(err, res) {
           if (err) return done(err)
-          res.body.consume('utf8', function(err, text) {
+          consume(res.body, 'utf8', function(err, text) {
             if (err) return done(err)
             text.should.match(/Should transfer it/)
             done()
