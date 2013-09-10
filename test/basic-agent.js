@@ -20,6 +20,19 @@ app.post('/echo', function(req, res) {
   req.pipe(res)
 })
 
+app.get('/response-timeout', function(req, res) {
+  setTimeout(function() {
+    res.send('done')
+  }, 1000)
+})
+
+app.get('/body-timeout', function(req, res) {
+  res.writeHead(200, {'content-type': 'text/plain'})
+  res.write('hello')
+  setTimeout(function() {
+    res.end('world')
+  }, 1000)
+})
 
 describe('Basic agent', function() {
   var u = require('./util/start')(app)
@@ -166,6 +179,44 @@ describe('Basic agent', function() {
         res.headers['x-hello'].should.equal('world')
         res.body.abort()
         done()
+      })
+    })
+  })
+
+  describe('Timeouts', function() {
+    describe('If headers were not received', function() {
+      it('Should yield timeout error to the .end() callback', function(done) {
+        agent
+        .extend()
+        .timeout(50)
+        .get(u + '/response-timeout')
+        .end(function(err) {
+          should.exist(err)
+          err.should.be.an.instanceOf(Error)
+          err.message.should.equal('Timeout of 50ms exceeded.')
+          done()
+        })
+      })
+    })
+
+    describe('If headers were received', function() {
+      it('Should yield an error to the body stream', function(done) {
+        var received = false
+        agent
+        .extend()
+        .timeout(50)
+        .onResponse(function(req, res, next) {
+          received = true
+          consume(res.body, next)
+        })
+        .get(u + '/body-timeout')
+        .end(function(err) {
+          received.should.be.true
+          should.exist(err)
+          err.should.be.an.instanceOf(Error)
+          err.message.should.equal('Timeout of 50ms exceeded.')
+          done()
+        })
       })
     })
   })
