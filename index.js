@@ -13,7 +13,7 @@ exports = module.exports = function(opts) {
     a.use(exports[name](opts[name]))
   }
 
-  use('cookies')
+  if (opts.cookies) a.use(exports.cookies(opts.cookies))
   use('redirects')
   use('unzip')
   use('parser')
