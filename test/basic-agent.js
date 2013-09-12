@@ -3,6 +3,7 @@ var should = require('should')
 var fs = require('fs')
 var Simple = require('stream-simple')
 var consume = require('simple-binary-consume')
+var Agent = require('../index')
 
 var app = express()
 
@@ -36,7 +37,7 @@ app.get('/body-timeout', function(req, res) {
 
 describe('Basic agent', function() {
   var u = require('./util/start')(app)
-  var agent = require('../index').basic()
+  var agent = Agent.basic()
 
   describe('response', function() {
     it('Should have `.headers`', function(done) {
@@ -170,30 +171,17 @@ describe('Basic agent', function() {
     })
   })
 
-  describe('Redirects', function() {
-    it('Should follow redirects', function(done) {
-      agent
-      .get(u + '/to-hello')
-      .end(function(err, res) {
-        if (err) return done(err)
-        res.headers['x-hello'].should.equal('world')
-        res.body.abort()
-        done()
-      })
-    })
-  })
-
   describe('Timeouts', function() {
+    var agent = Agent.basic({timeout: 10})
+
     describe('If headers were not received', function() {
       it('Should yield timeout error to the .end() callback', function(done) {
         agent
-        .extend()
-        .timeout(50)
         .get(u + '/response-timeout')
         .end(function(err) {
           should.exist(err)
           err.should.be.an.instanceOf(Error)
-          err.message.should.equal('Timeout of 50ms exceeded.')
+          err.message.should.equal('Timeout of 10ms exceeded.')
           done()
         })
       })
@@ -204,17 +192,18 @@ describe('Basic agent', function() {
         var received = false
         agent
         .extend()
-        .timeout(50)
-        .onResponse(function(req, res, next) {
-          received = true
-          consume(res.body, next)
+        .use(function(req, send, cb) {
+          send(req, function(err, res) {
+            received = true
+            consume(res.body, cb)
+          })
         })
         .get(u + '/body-timeout')
         .end(function(err) {
           received.should.be.true
           should.exist(err)
           err.should.be.an.instanceOf(Error)
-          err.message.should.equal('Timeout of 50ms exceeded.')
+          err.message.should.equal('Timeout of 10ms exceeded.')
           done()
         })
       })

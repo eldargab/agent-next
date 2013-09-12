@@ -2,37 +2,32 @@ var Agent = require('./lib/agent')
 var Request = require('./lib/request')
 var Response = require('./lib/response')
 var Url = require('./lib/url')
-var m = require('./lib/middlewares')
+var send = require('./lib/send')
 
 exports = module.exports = function(opts) {
   opts = opts || {}
-  var a = new Agent
+  var a = exports.basic(opts)
 
-  if (opts.unzip !== false) {
-    a.onResponse(m.unzip(opts.unzip))
-    a.onRequest(m.acceptEncoding('gzip,deflate'))
+  function use(name) {
+    if (opts[name] === false) return
+    a.use(exports[name](opts[name]))
   }
 
-  if (opts.parser !== false) {
-    a.onResponse(m.parser(opts.parser))
-  }
-
-  if (opts.serialize !== false) {
-    a.onRequest(m.serialize(opts.serialize))
-  }
+  use('cookies')
+  use('redirects')
+  use('unzip')
+  use('parser')
+  use('serialize')
 
   return a
 }
 
-exports.basic = function() {
-  return new Agent
+exports.basic = function(opts) {
+  opts = opts || {}
+  return new Agent(function(req, cb) {
+    send(req, opts, cb)
+  })
 }
-
-exports.parser = m.parser
-
-exports.serialize = m.serialize
-
-exports.unzip = m.unzip
 
 exports.Url = Url
 
@@ -41,3 +36,10 @@ exports.Agent = Agent
 exports.Request = Request
 
 exports.Response = Response
+
+// export middlewares
+require('fs')
+.readdirSync(require('path').join(__dirname, 'lib/middlewares'))
+.forEach(function(file) {
+  exports[file.slice(0, file.length - 3)] = require('./lib/middlewares/' + file)
+})

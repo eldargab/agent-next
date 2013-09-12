@@ -16,7 +16,9 @@ app.get('/', function(req, res) {
 
 describe('unzip middleware', function() {
   var u = start(app)
-  var agent = Agent.basic().onResponse(Agent.unzip())
+  var agent = Agent
+    .basic()
+    .use(Agent.unzip())
 
   it('Should decode gzip', function(done) {
     agent
