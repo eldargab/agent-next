@@ -26,7 +26,6 @@ describe('Default agent', function() {
     .send({foo: 'bar'})
     .end(function(err, res) {
       if (err) return done(err)
-      debugger
       res.headers.should.have.property('content-encoding').equal('gzip')
       res.text.should.equal('{"foo":"bar"}')
       res.body.should.eql({foo: 'bar'})
