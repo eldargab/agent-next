@@ -14,10 +14,13 @@ exports = module.exports = function(opts) {
   }
 
   if (opts.cookies) a.use(exports.cookies(opts.cookies))
+
   use('redirects')
   use('unzip')
   use('parser')
   use('serialize')
+
+  if (opts.exposeRequest) a.use(exports.exposeRequest())
 
   return a
 }
