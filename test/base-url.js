@@ -6,7 +6,7 @@ describe('base(url) middleware', function() {
 
   function test(b, given, expected) {
     var req = new Agent.Request('GET', given)
-    var m = Agent.base(b)
+    var m = Agent.baseUrl(b)
     var called = false
     m(req, function(r, c) {
       r.should.be.equal(req)
