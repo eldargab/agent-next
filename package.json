@@ -10,11 +10,11 @@
     "qs": "0.6.x",
     "mixobjects": "1.x",
     "methods": "0.0.x",
-    "cookiejar": "1.3.x",
     "mime": "1.x",
     "stream-simple": "0.2.x",
     "simple-binary-consume": "0.0.x",
-    "asyncloop": "0.0.1"
+    "asyncloop": "0.0.1",
+    "tough-cookie": "0.9.x"
   },
   "devDependencies": {
     "mocha": "*",
