@@ -29,7 +29,14 @@ That's it. You have a basic `send(req, cb)` function
 (internally backed by core http module) and just apply required functionality on top.
 Simple as that.
 
-In addition request-response objects (those returned and accepted by basic `send()`)
-are greatly simplified. The Request is just `.method`, `.url`, `.headers`
-and `.body`. The Response is just `.status`, `.headers`, `.body` + some sugar getters
+In addition request-response objects (those returned and accepted by the basic `send()`)
+are greatly simplified. The Request is just `method`, `url`, `headers`
+and `body`. The Response is just `status`, `headers`, `body` + some sugar getters
 (like `res.ok`, `res.mime`)
+
+Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
+`req.body` also can be a stream.
+
+All above makes `agent-next` simple, flexible, fun to use solution.
+For example you can swap entire http core and still have an advanced agent with
+everything been reused.
