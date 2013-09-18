@@ -20,9 +20,9 @@ describe('cookies', function() {
     .expect('http://example.com', 'foo=bar; bar=baz')
   })
 
-  xit('Should ignore malformed cookies', function() {
+  it('Should ignore malformed cookies', function() {
     test
-    .set('http://example.com', 'a=b, c=d')
+    .set('http://example.com', 'a=b;')
     .expect('http://example.com', null)
   })
 
