@@ -9,11 +9,40 @@ describe('cookies', function() {
   })
 
   it('Should accept single cookie', function() {
-    test.set('http://example.com', 'foo=bar').expect('http://example.com', 'foo=bar')
+    test
+    .set('http://example.com', 'foo=bar')
+    .expect('http://example.com', 'foo=bar')
   })
 
   it('Should accept multiple cookies', function() {
-    test.set('http://example.com', ['foo=bar', 'bar=baz']).expect('http://example.com', 'foo=bar; bar=baz')
+    test
+    .set('http://example.com', ['foo=bar', 'bar=baz'])
+    .expect('http://example.com', 'foo=bar; bar=baz')
+  })
+
+  xit('Should ignore malformed cookies', function() {
+    test
+    .set('http://example.com', 'a=b, c=d')
+    .expect('http://example.com', null)
+  })
+
+  it('Should not send cookies of foreign host', function() {
+    test
+    .set('http://example.com', 'foo=bar')
+    .expect('http://foo.com', null)
+  })
+
+  it('Should not send cookies of foreign path', function() {
+    test
+    .set('http://example.com', ['a=b; Path=/1', 'c=d; Path=/2'])
+    .expect('http://example.com/2', 'c=d')
+  })
+
+  it('Should reject cookies with illegal Domain', function() {
+    test
+    .set('http://foo.com', 'c=d; Domain=.example.com')
+    .expect('http://example.com', null)
+    .expect('http://foo.com', null)
   })
 })
 
@@ -36,7 +65,10 @@ Test.prototype.set = function(url, cookies) {
 Test.prototype.expect = function(url, cookies) {
   var req = {url: new Agent.Url(url), headers: {}}
   this.cookies(req, function(req, cb) {
-    req.headers.should.have.property('cookie').equal(cookies)
+    if (cookies)
+      req.headers.should.have.property('cookie').equal(cookies)
+    else
+      req.headers.should.not.have.property('cookie')
   }, function(err) {
     if (err) throw err
   })
