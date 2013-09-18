@@ -8,7 +8,7 @@ an agent abstraction not only as a cookie storage but as a general request
 processing steps setup.
 
 With `agent-next` all non-basic features (like redirects, gzip, etc)
-are delivered via simple functions with `(req, send, cb)` signature (aka middlewares)
+are delivered via simple, highly focused functions with `(req, send, cb)` signature (aka middlewares)
 and the agent itself is just:
 
 ```javascript
@@ -38,5 +38,3 @@ Streaming is fully supported. `res.body` is a [simple-stream](https://github.com
 `req.body` also can be a stream.
 
 All above makes `agent-next` simple, flexible, fun to use solution.
-For example you can swap entire http core and still have an advanced agent with
-everything been reused.
