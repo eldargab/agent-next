@@ -35,6 +35,6 @@ and `body`. The Response is just `status`, `headers`, `body` + some sugar getter
 (like `res.ok`, `res.mime`)
 
 Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
-`req.body` also can be a simple stream.
+`req.body` also can be a stream.
 
 All above makes `agent-next` simple, flexible, fun to use solution.
