@@ -37,13 +37,14 @@ and `body`. The Response is just `status`, `headers`, `body` + some sugar getter
 Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
 `req.body` can also be a simple-stream.
 
-##Example
+##Examples
 
 Agent created from scratch specifically for the Github API.
 
 ```javascript
 var Agent = require('agent-next')
-var github = Agent.basic()
+var github = Agent
+  .basic()
   .use(Agent.redirects(10))
   .use(Agent.parser())
   .use(Agent.serialize())
@@ -83,4 +84,13 @@ github
     console.log(repo.full_name)
   })
 })
+```
+
+Because it can be tedious to attach required middlewares each time
+some default setup is available which additionally can be turned
+with options.
+
+```javascript
+var request = Agent() // something very similar to superagent
+var agent = Agent({cookies: true}) // enable cookies support
 ```
