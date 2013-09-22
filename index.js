@@ -25,6 +25,17 @@ exports = module.exports = function(opts) {
   return a
 }
 
+/**
+ * Create a "basic" agent
+ *
+ * Options:
+ *
+ *    - `timeout`: Max wait time in `ms` for response body to be consumed.
+ *    - `nativeAgent`: Instance of core `http.Agent`. See node docs for details.
+ *
+ * @api public
+ */
+
 exports.basic = function(opts) {
   opts = opts || {}
   return new Agent(function(req, cb) {

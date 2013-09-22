@@ -35,6 +35,52 @@ and `body`. The Response is just `status`, `headers`, `body` + some sugar getter
 (like `res.ok`, `res.mime`)
 
 Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
-`req.body` also can be a stream.
+`req.body` also can be a simple-stream.
 
 All above makes `agent-next` simple, flexible, fun to use solution.
+
+##Look and feel
+
+Below is an example of agent setuped from scratch specifically for Github API.
+
+```javascript
+var Agent = require('agent-next')
+var github = Agent.basic()
+  .use(Agent.redirects(10))
+  .use(Agent.parser())
+  .use(Agent.serialize())
+  .use(Agent.baseUrl('https://api.github.com'))
+  .use(function(req, send, cb) {
+    req.headers['user-agent'] = 'test application'
+    send(req, function(err, res) {
+      if (err) return cb(err)
+      if (res.ok) return cb(null, res.body)
+      err = new Error(res.body.message)
+      err.req = req
+      err.res = res
+      cb(err)
+    })
+  })
+
+// Now we can start using it
+
+// get some info about agent-next repo
+github
+.get('/repos/eldargab/agent-next')
+.end(function(err, msg) {
+  console.log(msg.description)
+})
+
+// look for alternatives
+github
+.get('/search/repositories')
+.query({
+  q: 'agent+language:javascript'
+  sort: 'starts'
+})
+.end(function(err, msg) {
+  msg.items.forEach(function(repo) {
+    console.log(repo.full_name)
+  })
+})
+```
