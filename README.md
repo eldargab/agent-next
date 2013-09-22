@@ -64,7 +64,7 @@ var github = Agent.basic()
 
 // Now we can use it
 
-// get some info about repo
+// get some info about agent-next
 github
 .get('/repos/eldargab/agent-next')
 .end(function(err, msg) {
