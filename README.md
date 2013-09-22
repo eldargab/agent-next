@@ -37,8 +37,6 @@ and `body`. The Response is just `status`, `headers`, `body` + some sugar getter
 Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
 `req.body` can also be a simple-stream.
 
-All above makes `agent-next` simple, flexible, fun to use solution.
-
 ##Example
 
 Agent created from scratch specifically for the Github API.
