@@ -27,6 +27,7 @@ Agent.prototype.use = function(middleware) {
 
 That's it. You have a basic `send(req, cb)` function
 (internally backed by the core http module) and just apply required functionality on top.
+Simple as that.
 
 In addition request-response objects (those returned and accepted by the basic `send()`)
 are greatly simplified. The Request is just `method`, `url`, `headers`
