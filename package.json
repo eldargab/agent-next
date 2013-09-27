@@ -13,6 +13,7 @@
     "mime": "1.x",
     "stream-simple": "0.2.x",
     "simple-binary-consume": "0.0.x",
+    "simple-stream-dump": "0.0.1",
     "asyncloop": "0.0.1",
     "tough-cookie": "0.9.x"
   },
