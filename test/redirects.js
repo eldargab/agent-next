@@ -69,9 +69,9 @@ describe('redirects(max) middleware', function() {
     it('Should yield an error', function(done) {
       agent.get(u + '/0').end(function(err, res) {
         should.exist(err)
+        should.exist(res)
         err.message.should.equal('Max redirects count (1) exceeded.')
         err.redirects.should.eql(['/1', '/1/../2'])
-        err.should.have.property('res')
         done()
       })
     })
@@ -81,8 +81,9 @@ describe('redirects(max) middleware', function() {
       .basic()
       .use(Agent.redirects(0))
       .get(u + '/0')
-      .end(function(err) {
+      .end(function(err, res) {
         should.exist(err)
+        should.exist(res)
         err.message.should.equal('Max redirects count (0) exceeded.')
         err.redirects.should.eql(['/1'])
         done()
