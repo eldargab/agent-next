@@ -91,6 +91,6 @@ some default setup is available which additionally can be turned
 with options.
 
 ```javascript
-var request = Agent() // something very similar to superagent
+var agent = Agent() // something very similar to superagent
 var agent = Agent({cookies: true}) // enable cookies support
 ```
