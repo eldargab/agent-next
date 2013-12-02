@@ -2,11 +2,9 @@
 
 The idea is simple:
 
-Lets create a function `send(req, cb)`. Lets say that request is an object with
-`.url`, `.headers` and `.body` and the response is
-`.status`, `.headers` and `.body`. Lets say that `req.body` can be a `String`, `Buffer` and
-[SimpleStream](https://github.com/eldargab/stream-simple)
-and `res.body` is a `SimpleStream`.
+  1. Lets create a function `send(req, cb)`.
+  2. Lets say that request is `.url`, `.headers` and `.body`
+  3. Lets say that response is `.status`, `.headers` and `.body`.
 
 Given that:
 
