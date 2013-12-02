@@ -1,68 +1,96 @@
 #agent-next
 
-This project came out of experience with
-[superagent](https://github.com/visionmedia/superagent) which while
-establishes a good vein still has quite wide and controversal API surface as
-well as some implementation quirks. Another thing which I constantly missed is
-an agent abstraction not only as a cookie storage but as a general request
-processing steps setup.
+The idea is simple:
 
-With `agent-next` all non-basic features (like redirects, gzip, etc)
-are delivered via simple, highly focused functions with `(req, send, cb)` signature (aka middlewares)
-and the agent itself is just:
+1) Lets create a function
 
 ```javascript
-function Agent(send) {
-  this.send = send
-}
-
-Agent.prototype.use = function(middleware) {
-  var send = this.send
-  this.send = function(req, cb) {
-    middleware(req, send, cb)
-  }
-  return this
-}
+send(req, function(err, res) {})
 ```
 
-That's it. You have a basic `send(req, cb)` function
-(internally backed by the core http module) and just apply required functionality on top.
-Simple as that.
+2) Lets say that request is `.url`, `.headers`, '.body'
+and the response is `.status`, `.headers`, `.body`.
 
-In addition request-response objects (those returned and accepted by the basic `send()`)
-are greatly simplified. The Request is just `method`, `url`, `headers`
-and `body`. The Response is just `status`, `headers`, `body` + some sugar getters
-(like `res.ok`, `res.mime`)
+3) Lets say that req.body can be a `String`, `Buffer` and
+[SimpleStream](https://github.com/eldargab/stream-simple)
+and res.body is a `SimpleStream`.
 
-Streaming is fully supported. `res.body` is a [simple-stream](https://github.com/eldargab/stream-simple).
-`req.body` can also be a simple-stream.
-
-##Examples
-
-Agent created from scratch specifically for the Github API.
+Given that:
 
 ```javascript
+// cookie support? Easy!
+function agent(req, cb) {
+  setCookies(req)
+  send(req, function(err, res) {
+    saveCookies(res)
+    cb(err, res)
+  })
+}
+
+// redirects? Easy?
+function aagent(req, cb) {
+  agent(req, function(err, res) {
+    if (isRedirect(res)) return aagent(redirectRequest(req, res), cb)
+    cb(err, res)
+  })
+}
+
+// Everything is easy!
+```
+
+## What this project gives?
+
+Middlewares
+
+  * cookies
+  * redirects
+  * unzip
+  * body parser
+  * serialize (support for JSON request bodies)
+  * timeout
+  * baseUrl (setup base url for all requests)
+
+`Request`, `Response` prototypes in the vein of [superagent](https://github.com/visionmedia/superagent)
+
+`Agent` abstraction as an easy way to setup your `send` function and issueing requests with it.
+
+## What advantages it has over other libs (like request, superagent)?
+
+It is tremendously simpler. For example, you can swap entire http implementation and still have
+all advanced functionality available.
+
+## Examples
+
+basic
+
+```javascript
+var agent = require('agent-next')()
+agent
+.get('http://google.com/search/q=hello+world')
+.end(function(err, res) {
+  console.log(err || res.body)
+})
+
+advanced
+
+```javascript
+// Setup an agent specifically for the Github API from scratch
 var Agent = require('agent-next')
-var github = Agent
-  .basic()
+var github = Agent.basic()
   .use(Agent.redirects(10))
+  .use(Agent.unzip())
   .use(Agent.parser())
   .use(Agent.serialize())
   .use(Agent.baseUrl('https://api.github.com'))
   .use(function(req, send, cb) {
     req.headers['user-agent'] = 'test application'
-    req.headers['Accept'] = 'application/vnd.github.preview'
+    req.headers['accept'] = 'application/vnd.github.preview'
     send(req, function(err, res) {
       if (err) return cb(err)
       if (res.ok) return cb(null, res.body)
-      err = new Error(res.body.message)
-      err.req = req
-      err.res = res
-      cb(err)
+      cb(new Error(res.body.message))
     })
   })
-
-// Now we can use it
 
 // get some info about agent-next
 github
@@ -71,26 +99,35 @@ github
   console.log(err || msg.description)
 })
 
-// look for alternatives
-github
-.get('/search/repositories')
-.query({
-  q: 'agent+language:javascript',
-  sort: 'starts'
-})
-.end(function(err, msg) {
-  if (err) return console.log(err)
-  msg.items.forEach(function(repo) {
-    console.log(repo.full_name)
-  })
-})
+## Details
+
+## Installation
+
+via npm
+
+```
+npm install agent-next
 ```
 
-Because it can be tedious to attach required middlewares each time
-some default setup is available which additionally can be turned
-with options.
+## License
 
-```javascript
-var agent = Agent() // something very similar to superagent
-var agent = Agent({cookies: true}) // enable cookies support
-```
+(The MIT License)
+
+Copyright (c) 2013 Eldar Gabdullin <eldargab@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the 'Software'), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
