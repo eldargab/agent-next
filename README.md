@@ -118,7 +118,7 @@ var agent = Agent({
   [simple streams](https://github.com/eldargab/stream-simple)
   as an request body.
   * Response body is a simple stream (if not overrided by middleware)
-  * `req.url` must be an instance of `Agent.Url` object, not a string or an arbitrary map.
+  * `req.url` must be an instance of `Agent.Url`, not a string or an arbitrary object.
   * You must always either consume, abort or dump response body, usually via middlewares.
   * Middlewares should always pass the response object, even on errors, i.e.
   always do `cb(err, res)`, not just `cb(err)`.
