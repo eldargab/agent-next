@@ -18,7 +18,7 @@ function agent(req, cb) {
   })
 }
 
-// redirects? Easy?
+// redirects? Easy!
 function aagent(req, cb) {
   agent(req, function(err, res) {
     if (isRedirect(res)) return aagent(redirectRequest(req, res), cb)
@@ -26,7 +26,7 @@ function aagent(req, cb) {
   })
 }
 
-// Everything is easy!
+// Everything is easy.
 ```
 
 ## What this project gives?
@@ -40,6 +40,7 @@ Middlewares
   * serialize (support for JSON request bodies)
   * timeout
   * baseUrl (setup base url for all requests)
+  * handler (normalize results, i.e. attach `req` to errors, etc)
 
 `Request`, `Response` prototypes in the vein of [superagent](https://github.com/visionmedia/superagent)
 
@@ -47,8 +48,9 @@ Middlewares
 
 ## What advantages it has over other libs (like request, superagent)?
 
-It is tremendously simpler. For example, you can swap entire http implementation and still have
-all advanced functionality available.
+It is tremendously simpler and far more flexible.
+For example, you can swap entire http implementation and still have
+all advanced agent available.
 
 ## Examples
 
@@ -92,7 +94,35 @@ github
 })
 ```
 
-## Details
+setup with options
+
+```javascript
+var Agent = require('agent-next')
+
+// superagent like agent
+var agent = Agent()
+
+// tweak
+var agent = Agent({
+  cookies: true, // enable cookies
+  unzip: false, // disable gzip support
+  parser: fn, // set custom body parser
+  timeout: 30000,
+  baseUrl: 'http://example.com'
+})
+```
+
+## Notes
+
+  * Basic `send` function accepts strings, buffers and
+  [simple streams](https://github.com/eldargab/stream-simple)
+  as an request body.
+  * Response body is a simple stream (if not overrided by middleware)
+  * `req.url` must be an instance of Agent.Url object, not a string or an arbitrary map.
+  * You must always either consume, abort or dump response body. Usually this is done
+  by middlewares.
+  * Middlewares should pass the response object (if available) even on errors, i.e.
+  always do `cb(err, res)`, not just `cb(err)`.
 
 ## Installation
 
