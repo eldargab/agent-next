@@ -31,7 +31,7 @@ function aagent(req, cb) {
 
 ## What this project gives?
 
-Middlewares
+1) Middlewares
 
   * cookies
   * redirects
@@ -42,9 +42,9 @@ Middlewares
   * baseUrl (setup base url for all requests)
   * handler (normalize results, i.e. attach `req` to errors, etc)
 
-`Request`, `Response` prototypes in the vein of [superagent](https://github.com/visionmedia/superagent)
+2) `Request`, `Response` prototypes in the vein of [superagent](https://github.com/visionmedia/superagent)
 
-`Agent` abstraction as an easy way to setup your `send` function and issueing requests with it.
+3) `Agent` abstraction as an easy way to setup your `send` function and issueing requests with it.
 
 ## What advantages it has over other libs (like request or superagent)?
 
