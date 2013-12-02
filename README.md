@@ -46,11 +46,11 @@ Middlewares
 
 `Agent` abstraction as an easy way to setup your `send` function and issueing requests with it.
 
-## What advantages it has over other libs (like request, superagent)?
+## What advantages it has over other libs (like request or superagent)?
 
 It is tremendously simpler and far more flexible.
 For example, you can swap entire http implementation and still have
-all advanced agent available.
+advanced agent available.
 
 ## Examples
 
