@@ -44,7 +44,7 @@ function aagent(req, cb) {
 
 2) `Request`, `Response` prototypes in the vein of [superagent](https://github.com/visionmedia/superagent)
 
-3) `Agent` abstraction as an easy way to setup your `send` function and issueing requests with it.
+3) `Agent` abstraction as an easy way to setup your `send` function and issueing requests.
 
 ## What advantages it has over other libs (like request or superagent)?
 
