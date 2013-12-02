@@ -6,19 +6,24 @@ var send = require('./lib/send')
 
 exports = module.exports = function(opts) {
   opts = opts || {}
-  var a = exports.basic(opts)
+  var a = exports.basic()
 
-  function use(name) {
+  function use(name, optional) {
     if (opts[name] === false) return
+    if (optional && !opts[name]) return
     a.use(exports[name](opts[name]))
   }
 
-  if (opts.cookies)
-    a.use(exports.cookies(opts.cookies))
-
+  use('timeout', true)
+  use('cookies', true)
   use('redirects')
   use('unzip')
-  use('parser')
+
+  if (typeof opts.parser == 'function')
+    a.use(opts.parser)
+  else
+    use('parser')
+
   use('serialize')
   use('handler')
 
@@ -28,19 +33,11 @@ exports = module.exports = function(opts) {
 /**
  * Create a "basic" agent
  *
- * Options:
- *
- *    - `timeout`: Max wait time in `ms` for response body to be consumed.
- *    - `nativeAgent`: Instance of core `http.Agent`. See node docs for details.
- *
  * @api public
  */
 
-exports.basic = function(opts) {
-  opts = opts || {}
-  return new Agent(function(req, cb) {
-    send(req, opts, cb)
-  })
+exports.basic = function() {
+  return new Agent(send)
 }
 
 exports.Url = Url

@@ -172,7 +172,7 @@ describe('Basic agent', function() {
   })
 
   describe('Timeouts', function() {
-    var agent = Agent.basic({timeout: 10})
+    var agent = Agent.basic().use(Agent.timeout(10))
 
     describe('If headers were not received', function() {
       it('Should yield timeout error to the .end() callback', function(done) {
