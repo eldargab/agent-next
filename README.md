@@ -50,7 +50,7 @@ function aagent(req, cb) {
 
 It is tremendously simpler and far more flexible.
 For example, you can swap entire http implementation and still have
-advanced agent available.
+all advanced functionality available.
 
 ## Examples
 
@@ -99,7 +99,7 @@ setup with options
 ```javascript
 var Agent = require('agent-next')
 
-// superagent like agent
+// superagent like
 var agent = Agent()
 
 // tweak
@@ -118,10 +118,9 @@ var agent = Agent({
   [simple streams](https://github.com/eldargab/stream-simple)
   as an request body.
   * Response body is a simple stream (if not overrided by middleware)
-  * `req.url` must be an instance of Agent.Url object, not a string or an arbitrary map.
-  * You must always either consume, abort or dump response body. Usually this is done
-  by middlewares.
-  * Middlewares should pass the response object (if available) even on errors, i.e.
+  * `req.url` must be an instance of `Agent.Url` object, not a string or an arbitrary map.
+  * You must always either consume, abort or dump response body, usually via middlewares.
+  * Middlewares should always pass the response object, even on errors, i.e.
   always do `cb(err, res)`, not just `cb(err)`.
 
 ## Installation
