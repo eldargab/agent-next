@@ -2,18 +2,11 @@
 
 The idea is simple:
 
-1) Lets create a function
-
-```javascript
-send(req, function(err, res) {})
-```
-
-2) Lets say that request is `.url`, `.headers`, '.body'
-and the response is `.status`, `.headers`, `.body`.
-
-3) Lets say that req.body can be a `String`, `Buffer` and
+Lets create a function `send(req, cb)`. Lets say that request is an object with
+`.url`, `.headers` and `.body` and the response is
+`.status`, `.headers` and `.body`. Lets say that `req.body` can be a `String`, `Buffer` and
 [SimpleStream](https://github.com/eldargab/stream-simple)
-and res.body is a `SimpleStream`.
+and `res.body` is a `SimpleStream`.
 
 Given that:
 
@@ -70,6 +63,7 @@ agent
 .end(function(err, res) {
   console.log(err || res.body)
 })
+```
 
 advanced
 
@@ -98,6 +92,7 @@ github
 .end(function(err, msg) {
   console.log(err || msg.description)
 })
+```
 
 ## Details
 
