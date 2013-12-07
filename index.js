@@ -14,7 +14,6 @@ exports = module.exports = function(opts) {
     a.use(exports[name](opts[name]))
   }
 
-  use('timeout', true)
   use('cookies', true)
   use('redirects')
   use('unzip')
@@ -26,6 +25,7 @@ exports = module.exports = function(opts) {
 
   use('serialize')
   use('handler')
+  use('timeout', true)
 
   return a
 }

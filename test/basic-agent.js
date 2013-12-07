@@ -171,41 +171,45 @@ describe('Basic agent', function() {
     })
   })
 
-  describe('Timeouts', function() {
-    var agent = Agent.basic().use(Agent.timeout(10))
-
+  describe('req.abort', function() {
     describe('If headers were not received', function() {
-      it('Should yield timeout error to the .end() callback', function(done) {
-        agent
-        .get(u + '/response-timeout')
-        .end(function(err) {
+      it('Should yield the given error to the .end() callback', function(done) {
+        var req = agent.get(u + '/response-timeout')
+        req.end(function(err) {
           should.exist(err)
           err.should.be.an.instanceOf(Error)
-          err.message.should.equal('Timeout of 10ms exceeded.')
+          err.message.should.equal('abort error')
           done()
         })
+        req.abort(new Error('abort error'))
       })
     })
 
     describe('If headers were received', function() {
       it('Should yield an error to the body stream', function(done) {
         var received = false
-        agent
-        .extend()
-        .use(function(req, send, cb) {
-          send(req, function(err, res) {
-            received = true
-            consume(res.body, cb)
+        var req = agent
+          .extend()
+          .use(function(req, send, cb) {
+            send(req, function(err, res) {
+              received = true
+              should.exist(res)
+              consume(res.body, cb)
+            })
           })
-        })
-        .get(u + '/body-timeout')
-        .end(function(err) {
+          .get(u + '/body-timeout')
+
+        req.end(function(err) {
           received.should.be.true
           should.exist(err)
           err.should.be.an.instanceOf(Error)
-          err.message.should.equal('Timeout of 10ms exceeded.')
+          err.code.should.equal('EABORTED')
           done()
         })
+
+        setTimeout(function() {
+          req.abort()
+        }, 5)
       })
     })
   })
