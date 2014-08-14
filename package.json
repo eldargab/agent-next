@@ -9,7 +9,7 @@
     "url": "git://github.com/eldargab/agent-next"
   },
   "dependencies": {
-    "qs": "0.6.x",
+    "qs": "1.2.1",
     "mixobjects": "1.x",
     "methods": "0.0.x",
     "mime": "1.x",
